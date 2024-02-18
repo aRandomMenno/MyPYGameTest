@@ -1,23 +1,40 @@
 
 from pygame.math import Vector2; import pygame, sys, random
 
-class wall:
-    def __init__(self) -> None:
-        self.wallType1 = pygame.Rect(200, 200, 10, 200)
-        self.wallType2 = pygame.Rect(200, 200, 200, 10)
-        self.wallType3 = pygame.Rect(200, 200, 100, 10)
-        self.wallType4 = pygame.Rect(200, 200, 10, 100)
-        self.wallType5 = pygame.Rect(200, 200, 150, 10)
-        self.wallType6 = pygame.Rect(200, 200, 10, 150)
-    
-    def draw(self):
-        pygame.draw.rect(screen, [225, 10, 25], self.wallType3)
+class rooms:
+    def __init__(self):
+        self.roomSeed = 0
+        self.walls = []
+        self.numOfRooms = 10
+        self.i = None
+
+    def generateRoom(self):
+        screenWidth = 1000
+        screenHeight = 750
+
+        for _ in range(self.numOfRooms):
+            x = random.randint(0, screenWidth)
+            y = random.randint(50, screenHeight)
+            if random.choice([True, False]):
+                width = 10
+                height = random.randint(50, 400)
+            else:
+                width = random.randint(50, 400)
+                height = 10
+            self.walls.append([x, y, width, height])
+        
+    def drawRoom(self):
+        for wall in self.walls:
+            pygame.draw.rect(screen, [250, 25, 50], wall)
+
+    def getWalls(self):
+        return self.walls
 
 class PLAYER1:
-    def __init__(self) -> None:
-        self.position = Vector2(100, 100)
+    def __init__(self):
+        self.position = Vector2(20, 20)
         self.color = [70, 70, 170]
-        self.speed = 3.5
+        self.speed = 2
     
     def move(self):
         keys = pygame.key.get_pressed()
@@ -39,19 +56,22 @@ class PLAYER1:
 class MAIN:
     def __init__(self):
         self.player1 = PLAYER1()
+        self.rooms = rooms()
     
     def movement(self):
         self.player1.move()
         
     def drawElements(self):
         pygame.draw.circle(screen, self.player1.color, self.player1.position, 20)
-        wall.draw()
+        self.rooms.drawRoom()
         
     def checkCollision(self):
         playerRect = pygame.Rect(self.player1.position.x -  10, self.player1.position.y -  10,  20,  20)
-        wall = pygame.Rect(200,  200,  210,  210)
-        if playerRect.colliderect(wall):
-            self.gameOver()
+        if len(self.rooms.walls) <=  10:
+            self.rooms.generateRoom()
+        for wall in self.rooms.getWalls():
+            if playerRect.colliderect(wall):
+                self.gameOver()
             
     def gameOver(self):
         pygame.QUIT
@@ -65,7 +85,6 @@ clock = pygame.time.Clock()
 
 SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE, 10)
-wall = wall()
 game = MAIN()
 player1 = PLAYER1()
 
