@@ -5,7 +5,8 @@
 
 ## TODO
 
-- [X] Randomly generated rooms (partial: rooms are pretty ugly!)
-- [ ] Room completion... making you a little faster every time
-- [ ] Add sprites for the background, player and walls
-- [ ] Add music with no copyright
+- [ ] make enemies spawn
+- [ ] player has 'gun'
+- [ ] make them move towards player and kill them on contact
+- [ ] Add sprites for the background, player and enemies
+- [ ] Make some music
